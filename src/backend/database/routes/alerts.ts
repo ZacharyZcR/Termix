@@ -10,6 +10,7 @@ import { eq, and } from "drizzle-orm";
 import fetch from "node-fetch";
 import { authLogger } from "../../utils/logger.js";
 import { AuthManager } from "../../utils/auth-manager.js";
+import { getProxyAgent } from "../../utils/proxy-agent.js";
 
 class AlertCache {
   private cache: Map<string, CacheEntry> = new Map();
@@ -54,12 +55,14 @@ async function fetchAlertsFromGitHub(): Promise<TermixAlert[]> {
   }
   try {
     const url = `${GITHUB_RAW_BASE}/${REPO_OWNER}/${REPO_NAME}/${ALERTS_FILE}`;
+    const agent = getProxyAgent(url);
 
     const response = await fetch(url, {
       headers: {
         Accept: "application/json",
         "User-Agent": "TermixAlertChecker/1.0",
       },
+      agent,
     });
 
     if (!response.ok) {

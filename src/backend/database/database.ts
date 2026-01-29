@@ -25,6 +25,7 @@ import { UserDataExport } from "../utils/user-data-export.js";
 import { AutoSSLSetup } from "../utils/auto-ssl-setup.js";
 import { eq, and } from "drizzle-orm";
 import { parseUserAgent } from "../utils/user-agent-parser.js";
+import { getProxyAgent } from "../utils/proxy-agent.js";
 import {
   users,
   sshData,
@@ -166,12 +167,15 @@ async function fetchGitHubAPI<T>(
   }
 
   try {
-    const response = await fetch(`${GITHUB_API_BASE}${endpoint}`, {
+    const url = `${GITHUB_API_BASE}${endpoint}`;
+    const agent = getProxyAgent(url);
+    const response = await fetch(url, {
       headers: {
         Accept: "application/vnd.github+json",
         "User-Agent": "TermixUpdateChecker/1.0",
         "X-GitHub-Api-Version": "2022-11-28",
       },
+      agent,
     });
 
     if (!response.ok) {
