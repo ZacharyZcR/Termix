@@ -389,8 +389,8 @@ class SSHConnectionPool {
   private async createConnection(
     host: SSHHostWithCredentials,
   ): Promise<Client> {
-    return new Promise(async (resolve, reject) => {
-      const config = await buildSshConfig(host);
+    const config = await buildSshConfig(host);
+    return new Promise((resolve, reject) => {
       const client = new Client();
       const timeout = setTimeout(() => {
         client.end();

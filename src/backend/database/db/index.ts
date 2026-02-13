@@ -414,9 +414,11 @@ async function initializeCompleteDatabase(): Promise<void> {
 `);
 
   try {
-    sqlite.prepare("DELETE FROM sessions").run();
+    sqlite
+      .prepare("DELETE FROM sessions WHERE expires_at < datetime('now')")
+      .run();
   } catch (e) {
-    databaseLogger.warn("Could not clear sessions on startup", {
+    databaseLogger.warn("Could not clear expired sessions on startup", {
       operation: "db_init_session_cleanup_failed",
       error: e,
     });
@@ -641,6 +643,7 @@ const migrateSchema = () => {
       const tempTableName = "ssh_credentials_temp_migration";
       const allColumns = tableInfo.map((col) => col.name).join(", ");
 
+      sqlite.exec(`PRAGMA foreign_keys = OFF`);
       sqlite.exec(`
         CREATE TABLE ${tempTableName} (
           id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -674,6 +677,7 @@ const migrateSchema = () => {
 
         ALTER TABLE ${tempTableName} RENAME TO ssh_credentials;
       `);
+      sqlite.exec(`PRAGMA foreign_keys = ON`);
 
       databaseLogger.info("Successfully migrated ssh_credentials table to remove username NOT NULL constraint", {
         operation: "schema_migration_username_nullable",

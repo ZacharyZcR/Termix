@@ -1,5 +1,6 @@
 {
   "credentials": {
+    "credentials": "Legitimasjon",
     "credentialsViewer": "Legitimasjonsvisning",
     "manageYourSSHCredentials": "Administrer SSH-legitimasjon sikkert",
     "addCredential": "Legg til legitimasjon",
@@ -99,6 +100,10 @@
     "deploymentProcessDescription": "Dette legger den offentlige nøkkelen trygt til målserverens ~/.ssh/authorized_keys uten å overskrive eksisterende nøkler. Operasjonen kan reverseres.",
     "chooseHostToDeploy": "Velg en vert å distribuere til...",
     "deploying": "Distribuerer...",
+    "copyDeployCommand": "Kopier distribueringskommandoen",
+    "copyDeployCommandDescription": "Kopier en skallkommando for å legge den offentlige nøkkelen til en verts autorisert_key-fil. Nyttig når passordautentisering er deaktivert.",
+    "deployCommandCopied": "Distribuer kommandoen kopiert til utklippstavlen",
+    "manualDeployInfo": "Lim inn denne kommandoen i målvertens terminal (f.eks. Proxmox konsoll, IPMI eller fysisk tilgang) for å legge til SSH-nøkkelen.",
     "name": "Navn",
     "noHostsAvailable": "Ingen verter tilgjengelig",
     "noHostsMatchSearch": "Ingen verter samsvarer med søket",
@@ -298,7 +303,9 @@
     "createFolder": "Opprett mappe",
     "editFolder": "Rediger mappe",
     "editFolderDescription": "Tilpass utdragsmappen din",
-    "createFolderDescription": "Organiser snippeten dine i mapper"
+    "createFolderDescription": "Organiser snippeten dine i mapper",
+    "confirmExecution": "Utfør \"{{name}}\"?",
+    "confirmExecutionDesc": "Er du sikker på at du vil utføre dette snippet?"
   },
   "commandHistory": {
     "title": "Historikk",
@@ -402,6 +409,7 @@
     "required": "Påkrevd",
     "optional": "Valgfritt",
     "connect": "Koble til",
+    "copied": "Kopiert",
     "connecting": "Kobler til...",
     "creating": "Oppretter...",
     "clear": "Tøm",
@@ -494,6 +502,7 @@
     "checking": "Kontrollerer...",
     "checkingDatabase": "Kontrollerer databaseforbindelse...",
     "checkingAuthentication": "Kontrollerer autentisering...",
+    "backendReconnected": "Servertilkobling gjenopprettet",
     "actions": "Handlinger",
     "remove": "Fjern",
     "revoke": "Revoke",
@@ -806,6 +815,7 @@
   },
   "hosts": {
     "title": "Vertadministrator",
+    "hosts": "Verter",
     "sshHosts": "SSH-verter",
     "noHosts": "Ingen SSH-verter",
     "noHostsMessage": "Du har ikke lagt til noen SSH-verter ennå. Klikk \"Legg til vert\" for å begynne.",
@@ -836,7 +846,7 @@
     "failedToImportJson": "Kunne ikke importere JSON-fil",
     "connectionDetails": "Tilkoblingsdetaljer",
     "organization": "Organisasjon",
-    "ipAddress": "IP-adresse",
+    "ipAddress": "IP adresse eller vertsnavn",
     "port": "Port",
     "name": "Navn",
     "username": "Brukernavn",
@@ -915,6 +925,8 @@
     "key": "Nøkkel",
     "credential": "Legitimasjon",
     "none": "Ingen",
+    "opkssh": "OPKSSH",
+    "opksshAuthDescription": "Ledetekster deg for OPKSSH web-auth ved hver tilkobling. Auth token varer i 24 timer til den må fornyes.",
     "selectCredential": "Velg legitimasjon",
     "selectCredentialPlaceholder": "Velg en legitimasjon...",
     "credentialRequired": "Legitimasjon kreves ved legitimasjonsautentisering",
@@ -1083,6 +1095,7 @@
     "noneAuthTitle": "Tastaturinteraktiv autentisering",
     "noneAuthDescription": "Denne autentiseringsmetoden bruker tastaturinteraktiv autentisering ved tilkobling til SSH-serveren.",
     "noneAuthDetails": "Tastaturinteraktiv autentisering lar serveren be deg om legitimasjon under tilkobling. Nyttig for servere som krever flerfaktorautentisering eller hvis du ikke vil lagre legitimasjon lokalt.",
+    "opksshAuthTitle": "OPKSSH godkjenning",
     "forceKeyboardInteractive": "Tving tastaturinteraktiv",
     "forceKeyboardInteractiveDesc": "Tving bruk av tastaturinteraktiv autentisering. Ofte nødvendig for servere som bruker tofaktorautentisering (TOTP/2FA).",
     "overrideCredentialUsername": "Overstyr brukernavn fra legitimasjon",
@@ -1316,6 +1329,15 @@
     "warpgateOpenBrowser": "Åpne i nettleser",
     "warpgateContinue": "Jeg har fullført godkjenning",
     "warpgateTimeout": "Warpgate autentisering tidsavbrudd. Vennligst koble til på nytt.",
+    "opksshAuthRequired": "OPKSSH godkjenning kreves",
+    "opksshAuthDescription": "Fullstendig autentisering i nettleseren din for å fortsette. Denne økten er gyldig i 24 timer.",
+    "opksshAuthUrl": "Autentisering URL",
+    "opksshOpenBrowser": "Åpne nettleseren for å godkjenne",
+    "opksshWaitingForAuth": "Venter på godkjenning i nettleseren...",
+    "opksshAuthenticating": "Behandler autentisering...",
+    "opksshTimeout": "Autentisering ble tidsavbrutt. Vennligst prøv igjen.",
+    "opksshAuthFailed": "Godkjenning mislyktes. Kontroller påloggingsinformasjonen, og prøv på nytt.",
+    "opksshConfigMissing": "OPKSSH konfigurasjon ikke funnet. Lag ~/.opk/config.yml med dine OIDC leverandørinnstillinger. Se dokumentasjon: https://github.com/openpubkey/opkssh#configuration",
     "sudoPasswordPopupTitle": "Sette inn passord?",
     "sudoPasswordPopupHint": "Trykk på Enter for å sette inn, Esc for å fjerne",
     "sudoPasswordPopupConfirm": "Insert",
@@ -1337,7 +1359,8 @@
     "automaticFallback": "Prøver automatisk {{method}} autentisering...",
     "totpTimeout": "TOTP-verifisering tidsavbrudd. Vennligst koble til på nytt.",
     "passwordTimeout": "Tidsavbrudd for bekreftelse av passord. Vennligst koble til på nytt.",
-    "connectionRejected": "Tilkobling avvist av serveren. Kontroller godkjennings- og nettverkskonfigurasjonen."
+    "connectionRejected": "Tilkobling avvist av serveren. Kontroller godkjennings- og nettverkskonfigurasjonen.",
+    "hostKeyRejected": "SSH vertsnøkkelverifisering ble avvist. Tilkoblingen avbrutt."
   },
   "fileManager": {
     "title": "Filbehandler",
@@ -1934,6 +1957,20 @@
     "passwordResetSuccess": "Tilbakestilling av passord vellykket",
     "passwordResetSuccessDesc": "Passordet er blitt tilbakestilt. Du kan nå logge inn med ditt nye passord."
   },
+  "hostKey": {
+    "verifyNewHost": "Verifiser SSH vertsnøkkel",
+    "keyChangedWarning": "SSH vertsnøkkel endret",
+    "firstConnectionTitle": "Første gang du kobler til denne verten",
+    "firstConnectionDescription": "Vertens autensitet kan ikke etableres. Kontroller fingeravtrykket samsvarer med det du forventer.",
+    "keyChangedDescription": "Vertsnøkkelen for denne serveren er endret siden forrige tilkobling. Dette kan angi et sikkerhetsproblem.",
+    "previousKey": "Forrige nøkkel",
+    "newFingerprint": "Nytt fingeravtrykk",
+    "fingerprint": "Fingeravtrykk",
+    "verifyInstructions": "Hvis du stoler på denne verten, klikk Godta for å fortsette og lagre dette fingeravtrykket for fremtidige tilkoblinger.",
+    "securityWarning": "Sikkerhetsadvarsel",
+    "acceptAndContinue": "Godta og fortsett",
+    "acceptNewKey": "Aksepter ny nøkkel og fortsett"
+  },
   "errors": {
     "notFound": "Siden ble ikke funnet",
     "unauthorized": "Uautorisert tilgang",
@@ -2026,6 +2063,8 @@
     "terminalSettings": "Terminal",
     "hostSidebarSettings": "Verts- og sidepanelet",
     "snippetsSettings": "Snippets",
+    "confirmSnippetExecution": "Bekreft kjøring av bruddtekst",
+    "confirmSnippetExecutionDesc": "Vis bekreftelsesdialog før du utfører snippets",
     "updateSettings": "Oppdateringer",
     "disableUpdateCheck": "Deaktiver oppdateringskontroll",
     "disableUpdateCheckDesc": "Slutt å sjekke nye versjoner ved oppstart og dashbord. Reduserer nettverksforespørsler.",
@@ -2046,7 +2085,7 @@
   },
   "placeholders": {
     "enterCode": "000000",
-    "ipAddress": "127.0.0.1",
+    "ipAddress": "192.168.1.1 eller eksempel.no",
     "port": "22",
     "maxRetries": "3",
     "retryInterval": "10",
