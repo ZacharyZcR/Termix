@@ -16,6 +16,7 @@ export function DatabaseSecurityTab({
   currentUser,
 }: DatabaseSecurityTabProps): React.ReactElement {
   const { t } = useTranslation();
+  void currentUser;
 
   const [exportLoading, setExportLoading] = React.useState(false);
   const [importLoading, setImportLoading] = React.useState(false);

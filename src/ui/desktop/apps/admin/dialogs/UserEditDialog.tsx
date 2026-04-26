@@ -5,7 +5,6 @@ import {
   DialogDescription,
   DialogHeader,
   DialogTitle,
-  DialogFooter,
 } from "@/components/ui/dialog.tsx";
 import { Button } from "@/components/ui/button.tsx";
 import { Label } from "@/components/ui/label.tsx";
@@ -20,7 +19,6 @@ import {
   Plus,
   AlertCircle,
   Shield,
-  Key,
   Clock,
 } from "lucide-react";
 import { toast } from "sonner";
@@ -32,7 +30,6 @@ import {
   removeRoleFromUser,
   makeUserAdmin,
   removeAdminStatus,
-  initiatePasswordReset,
   revokeAllUserSessions,
   deleteUser,
   type UserRole,
@@ -62,13 +59,11 @@ export function UserEditDialog({
   user,
   currentUser,
   onSuccess,
-  allowPasswordLogin,
 }: UserEditDialogProps) {
   const { t } = useTranslation();
   const { confirmWithToast } = useConfirmation();
 
   const [adminLoading, setAdminLoading] = useState(false);
-  const [passwordResetLoading, setPasswordResetLoading] = useState(false);
   const [sessionLoading, setSessionLoading] = useState(false);
   const [deleteLoading, setDeleteLoading] = useState(false);
   const [rolesLoading, setRolesLoading] = useState(false);
@@ -157,42 +152,6 @@ export function UserEditDialog({
       onOpenChange(true);
     } finally {
       setAdminLoading(false);
-    }
-  };
-
-  const handlePasswordReset = async () => {
-    if (!user) return;
-
-    const userToReset = user;
-    onOpenChange(false);
-
-    const confirmed = await confirmWithToast({
-      title: t("admin.resetUserPassword"),
-      description: `${t("admin.passwordResetWarning")} (${userToReset.username})`,
-      confirmText: t("admin.resetUserPassword"),
-      cancelText: t("common.cancel"),
-      variant: "destructive",
-    });
-
-    if (!confirmed) {
-      onOpenChange(true);
-      return;
-    }
-
-    setPasswordResetLoading(true);
-    try {
-      await initiatePasswordReset(userToReset.username);
-      toast.success(
-        t("admin.passwordResetInitiated", { username: userToReset.username }),
-      );
-      onSuccess();
-      onOpenChange(true);
-    } catch (error) {
-      console.error("Failed to reset password:", error);
-      toast.error(t("admin.failedToResetPassword"));
-      onOpenChange(true);
-    } finally {
-      setPasswordResetLoading(false);
     }
   };
 
@@ -341,9 +300,6 @@ export function UserEditDialog({
   };
 
   if (!user) return null;
-
-  const showPasswordReset =
-    allowPasswordLogin && (user.passwordHash || !user.isOidc);
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>

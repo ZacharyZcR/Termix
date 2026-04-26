@@ -6,7 +6,7 @@ import { PermissionManager } from "../utils/permission-manager.js";
 import { SimpleDBOps } from "../utils/simple-db-ops.js";
 import { getDb } from "../database/db/index.js";
 import { hosts } from "../database/db/schema.js";
-import { eq, and } from "drizzle-orm";
+import { eq } from "drizzle-orm";
 import type { AuthenticatedRequest } from "../../types/index.js";
 
 const router = express.Router();
@@ -31,7 +31,6 @@ router.use(authManager.createAuthMiddleware());
  */
 router.post("/token", async (req, res) => {
   try {
-    const userId = (req as AuthenticatedRequest).userId;
     const { type, hostname, port, username, password, domain, ...options } =
       req.body;
 

@@ -3,7 +3,6 @@ import React, {
   Component,
   Suspense,
   lazy,
-  type ErrorInfo,
   type ReactNode,
   useEffect,
   useRef,
@@ -23,7 +22,6 @@ import { toast } from "sonner";
 import {
   getUserInfo,
   logoutUser,
-  isElectron,
   isCurrentAuthInvalidationError,
 } from "@/ui/main-axios.ts";
 import { useTheme } from "@/components/theme-provider";
@@ -713,7 +711,7 @@ class TabErrorBoundary extends Component<
     throw error;
   }
 
-  componentDidCatch(error: Error, errorInfo: ErrorInfo) {
+  componentDidCatch(error: Error) {
     if (error.message?.includes("useTabs must be used within a TabProvider")) {
       console.warn(
         "TabProvider mounting race condition detected, recovering...",

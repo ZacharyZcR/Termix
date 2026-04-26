@@ -1,14 +1,7 @@
 import React from "react";
 import { useSidebar } from "@/components/ui/sidebar.tsx";
 import { Separator } from "@/components/ui/separator.tsx";
-import {
-  Tabs,
-  TabsContent,
-  TabsList,
-  TabsTrigger,
-} from "@/components/ui/tabs.tsx";
 import { useTranslation } from "react-i18next";
-import { toast } from "sonner";
 import type { SSHHost, DockerContainer, DockerValidation } from "@/types";
 import {
   connectDockerSession,
@@ -43,12 +36,6 @@ interface DockerManagerProps {
   onClose?: () => void;
 }
 
-interface TabData {
-  id: number;
-  type: string;
-  [key: string]: unknown;
-}
-
 function DockerManagerInner({
   hostConfig,
   title,
@@ -76,7 +63,6 @@ function DockerManagerInner({
     string | null
   >(null);
   const [isConnecting, setIsConnecting] = React.useState(false);
-  const [activeTab, setActiveTab] = React.useState("containers");
   const [dockerValidation, setDockerValidation] =
     React.useState<DockerValidation | null>(null);
   const [isValidating, setIsValidating] = React.useState(false);

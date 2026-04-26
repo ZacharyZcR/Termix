@@ -21,12 +21,10 @@ export const FullScreenAppWrapper: React.FC<FullScreenAppWrapperProps> = ({
   const [loading, setLoading] = useState(true);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [authLoading, setAuthLoading] = useState(true);
-  const [isAdmin, setIsAdmin] = useState(false);
 
   useEffect(() => {
     const handleSessionExpired = () => {
       setIsAuthenticated(false);
-      setIsAdmin(false);
       setHostConfig(null);
     };
 
@@ -40,9 +38,8 @@ export const FullScreenAppWrapper: React.FC<FullScreenAppWrapperProps> = ({
         const userInfo = await getUserInfo();
         if (userInfo) {
           setIsAuthenticated(true);
-          setIsAdmin(userInfo.isAdmin || false);
         }
-      } catch (error) {
+      } catch {
         setIsAuthenticated(false);
       } finally {
         setAuthLoading(false);
@@ -77,13 +74,8 @@ export const FullScreenAppWrapper: React.FC<FullScreenAppWrapperProps> = ({
     }
   }, [hostId, isAuthenticated, authLoading]);
 
-  const handleAuthSuccess = (authData: {
-    isAdmin: boolean;
-    username: string | null;
-    userId: string | null;
-  }) => {
+  const handleAuthSuccess = () => {
     setIsAuthenticated(true);
-    setIsAdmin(authData.isAdmin);
     window.location.reload();
   };
 
