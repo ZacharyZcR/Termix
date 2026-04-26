@@ -149,7 +149,9 @@ async function clearElectronClientCacheIfVersionChanged() {
 
   try {
     if (fs.existsSync(electronCacheVersionPath)) {
-      const data = JSON.parse(fs.readFileSync(electronCacheVersionPath, "utf8"));
+      const data = JSON.parse(
+        fs.readFileSync(electronCacheVersionPath, "utf8"),
+      );
       previousVersion = typeof data.version === "string" ? data.version : null;
     }
   } catch (error) {
