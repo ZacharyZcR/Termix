@@ -403,12 +403,6 @@ export const GuacamoleDisplay = forwardRef<
     const tunnel = new Guacamole.WebSocketTunnel(wsConnection.url);
     const client = new Guacamole.Client(tunnel);
     clientRef.current = client;
-    let connectWatchdog: ReturnType<typeof setTimeout> | null = null;
-    const clearConnectWatchdog = () => {
-      if (!connectWatchdog) return;
-      clearTimeout(connectWatchdog);
-      connectWatchdog = null;
-    };
 
     const display = client.getDisplay();
     const displayElement = display.getElement();
@@ -508,7 +502,6 @@ export const GuacamoleDisplay = forwardRef<
         case 2:
           break;
         case 3:
-          clearConnectWatchdog();
           isConnectingRef.current = false;
           setIsReady(true);
           onConnect?.();
@@ -531,7 +524,6 @@ export const GuacamoleDisplay = forwardRef<
         case 4:
           break;
         case 5:
-          clearConnectWatchdog();
           isConnectingRef.current = false;
           setIsReady(false);
           setHasError(true);
@@ -545,7 +537,6 @@ export const GuacamoleDisplay = forwardRef<
 
     client.onerror = (error: Guacamole.Status) => {
       if (!isMountedRef.current || clientRef.current !== client) return;
-      clearConnectWatchdog();
       const errorMessage = error.message || t("guacamole.connectionError");
       setIsReady(false);
       setHasError(true);
@@ -603,21 +594,8 @@ export const GuacamoleDisplay = forwardRef<
     };
 
     try {
-      connectWatchdog = setTimeout(() => {
-        if (
-          !isMountedRef.current ||
-          clientRef.current !== client ||
-          !isConnectingRef.current
-        ) {
-          return;
-        }
-
-        disconnectClient();
-        void connect();
-      }, 8000);
       client.connect(wsConnection.query);
     } catch (error) {
-      clearConnectWatchdog();
       isConnectingRef.current = false;
       if (!isMountedRef.current) return;
       setIsReady(false);
@@ -631,7 +609,6 @@ export const GuacamoleDisplay = forwardRef<
     onError,
     refreshKeyboardHandlers,
     rescaleDisplay,
-    disconnectClient,
     connectionConfig.protocol,
     connectionConfig.type,
     connectionConfig.dpi,
