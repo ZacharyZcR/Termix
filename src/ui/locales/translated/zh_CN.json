@@ -479,7 +479,7 @@
     "sameHost": "此主机（直接隧道）",
     "statusChecksLabel": "状态检查",
     "enableStatusChecks": "启用状态检查",
-    "enableStatusChecksDesc": "定期 ping 此主机以验证可用性",
+    "enableStatusChecksDesc": "检查主机连通性。存在活动会话时跳过额外探测。没有活动会话时，SSH 探测可能触发严格的 Fail2Ban 规则；请在此类主机上关闭状态检查。",
     "useGlobalInterval": "使用全局间隔",
     "useGlobalIntervalDesc": "使用服务器范围的状态检查间隔覆盖",
     "checkIntervalS": "检查间隔（秒）",
